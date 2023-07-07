@@ -67,6 +67,7 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <input class="btn btn-primary px-4 mx-auto d-block a-forgetpass" type="submit" value="Login"></input>
+                                                <a href="{{ route('admin.forgot-password') }}" class="float-end text-decoration-none">Forget Pass</a>
                                             </div>
                                         </div>
                                     </form>

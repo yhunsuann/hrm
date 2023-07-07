@@ -1,4 +1,4 @@
-@extends('admin.layout.layout') @section('content')
+@extends('admin.layout.layout') @section('content') @include('admin.layout.partials.flag')
 <div class="container-fluid mb-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb my-0 ms-2">
@@ -14,23 +14,28 @@
         <div class="col p-0">
             <h5>Attendance this month</h5>
         </div>
-        <form id="form-employee" class="mb-0" method="get">
-            <div class="col search">
-                <div class="row float-end search-row">
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col search">
+            <form id="form-employee" class="mb-0" method="get">
+                <div class="row">
                     <div class="col-5 p-0">
-                        <div class="input-group">
-                            <select name="month" class="form-control">
-                            @for ($i = 1; $i <= 12; $i++)
-                                <option value="{{ $i }}" @if ($i == date('n')) selected @endif>
-                                    {{ date('F', mktime(0, 0, 0, $i, 1)) }}
-                                </option>
-                            @endfor
-                            </select>
+                        <div class="datepicker-month date d-flex  mt-0 mx-auto">
+                            <div class="input-group">
+                                <input placeholder="Change month..." value="{{ request()->month }}" name="month" type="text" class="form-control date-picker">
+                                <div class="input-group-append">
+                                    <span class="input-group-text h-100"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-5">
                         <select class="form-control" name="name" id="status" style="width: 100% !important">
                             <option selected value="">Search employee...</option>
+                            @if(request()->has('name'))
+                            <option value="{{ request()->name  }}" selected>{{ request()->name }}</option>
+                            @endif
                             @forelse($emlpoyees as $data_name)
                                 <option value="{{ $data_name->full_name }}">{{ $data_name->full_name }}</option>
                             @empty 
@@ -38,16 +43,21 @@
                             @endforelse
                         </select>
                     </div>
-                    <div class="col-2 text-end">
+                    <div class="col-1 text-end">
                         <a type="button" id="submit-button" class="search-button">
                             <svg class="icon-search">
                             <use xlink:href="{{ asset('coreUi/vendors/@coreui/icons/svg/free.svg#cil-search') }}"></use>
                             </svg>
                         </a>
                     </div>
+                    <div class="col-1 text-start p-0">
+                        <a href="{{ route('admin.attendance.index') }}" class="reset-button">
+                            <i class="fa fas fa-undo"></i>
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
     <div class="row mt-4">
         <div class="col col-table px-3 bg-white" style="overflow-x:auto;">
@@ -58,7 +68,7 @@
                         <th scope="col"><b>Role</b></th>
                         <th scope="col"><b>Total work</b></th>
                         <th scope="col"><b>Total days off</b></th>
-                        <th scope="col"><b>Overtime</b></th>
+                        <th scope="col"><b>Total days late</b></th>
                         <th scope="col" class="text-center"><b>Action</b></th>
                     </tr>
                 </thead>
@@ -68,8 +78,9 @@
                         <td>{{ $attendance->full_name }}</td>
                         <td>{{ $attendance->role_name }}</td>
                         <td>{{ $attendance->total_working_days }}</td>
-                        <td>2</td>
-                        <td>0</td>
+                        <td>{{ $attendance->total_off }}</td>
+                        <td>{{ $attendance->total_late }}</td>
+
                         <td class="text-center action-form">
                             <a href="{{ route('admin.attendance.detail',$attendance->employee_id) }}" class="cursor-pointer btn-edit"><i class="fa fa-solid fa-wrench"></i></a>&nbsp;
                             <a data-id="" m-type="recruitment" type="button" data-coreui-toggle="modal" data-coreui-target="#exampleModal" class="open-modal btn-delete"><i class="fa fa-solid fa-trash"></i></a>

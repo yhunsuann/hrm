@@ -11,6 +11,7 @@
                 <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
                     <div class="simplebar-content-wrapper" tabindex="0" role="region" aria-label="scrollable content" style="height: 100%; overflow: hidden scroll;">
                         <div class="simplebar-content" style="padding: 0px;">
+                            @can('dashboard-menu') 
                             <li class="nav-item ">
                                 <a class="nav-link {{ request()->segment(2) === null ? 'active' : '' }}">
                                     <svg class="nav-icon">
@@ -20,6 +21,8 @@
                                     </svg> Dashboard
                                 </a>
                             </li>
+                            @endcan
+                            @can('role-menu')
                             <li class="nav-group">
                                 <a class="nav-link nav-group-toggle {{ request()->segment(2) === 'role' ? 'active' : '' }}">
                                     <svg class="nav-icon">
@@ -30,6 +33,8 @@
                                     <li class="nav-item"><a href="{{ route('admin.role.create') }}" class="nav-link"><span class="nav-icon"></span>Create</a></li>
                                 </ul>
                             </li>
+                            @endcan
+                            @can('employee-menu')
                             <li class="nav-group">
                                 <a class="nav-link nav-group-toggle {{ request()->segment(2) === 'employee' ? 'active' : '' }}">
                                     <svg class="nav-icon">
@@ -40,6 +45,30 @@
                                     <li class="nav-item"><a  href="{{ route('admin.employee.create') }}" class="nav-link"><span class="nav-icon"></span>Create</a></li>
                                 </ul>
                             </li>
+                            @endcan
+                            @can('employee-info')
+                            <li class="nav-item ">
+                                <a class="nav-link {{ request()->segment(2) === 'employee' ? 'active' : '' }}"  href="{{ route('admin.employee.info', auth()->user()->id) }}">
+                                    <svg class="nav-icon">
+                                        <use
+                                            xlink:href="{{ asset('coreUi/vendors/@coreui/icons/svg/free.svg#cil-user') }}">
+                                        </use>
+                                    </svg> Information
+                                </a>
+                            </li>
+                            @endcan
+                            @can('employee-info')
+                            <li class="nav-item ">
+                                <a class="nav-link {{ request()->segment(2) === 'attendance' ? 'active' : '' }}"  href="{{ route('admin.attendance.today') }}">
+                                    <svg class="nav-icon">
+                                        <use
+                                            xlink:href="{{ asset('coreUi/vendors/@coreui/icons/svg/free.svg#cil-speedometer') }}">
+                                        </use>
+                                    </svg> Attendance today
+                                </a>
+                            </li>
+                            @endcan
+                            @can('project-menu')
                             <li class="nav-group">
                                 <a class="nav-link nav-group-toggle {{ request()->segment(2) === 'project' ? 'active' : '' }}">
                                     <svg class="nav-icon">
@@ -50,6 +79,8 @@
                                     <li class="nav-item"><a  href="{{ route('admin.project.create') }}" class="nav-link"><span class="nav-icon"></span>Create</a></li>
                                 </ul>
                             </li>
+                            @endcan
+                            @can('schedule-menu') 
                             <li class="nav-group">
                                 <a class="nav-link nav-group-toggle {{ request()->segment(2) === 'schedule' ? 'active' : '' }}">
                                     <svg class="nav-icon">
@@ -60,6 +91,8 @@
                                     <li class="nav-item"><a  href="{{ route('admin.schedule.create') }}" class="nav-link"><span class="nav-icon"></span>Create</a></li>
                                 </ul>
                             </li>
+                            @endcan
+                            @can('attendance-menu') 
                             <li class="nav-item ">
                                 <a class="nav-link {{ request()->segment(2) === 'attendance' ? 'active' : '' }}"  href="{{ route('admin.attendance.index') }}">
                                     <svg class="nav-icon">
@@ -69,15 +102,18 @@
                                     </svg> Attendance
                                 </a>
                             </li>
+                            @endcan
+                            @can('request-off-menu') 
                             <li class="nav-item ">
                                 <a class="nav-link {{ request()->segment(2) === 'leave' ? 'active' : '' }}"  href="{{ route('admin.leave.index') }}">
                                     <svg class="nav-icon">
                                         <use
                                             xlink:href="{{ asset('coreUi/vendors/@coreui/icons/svg/free.svg#cil-user') }}">
                                         </use>
-                                    </svg> Leave Management
+                                    </svg> Request Off
                                 </a>
                             </li>
+                            @endcan
                         </div>
                     </div>
                 </div>

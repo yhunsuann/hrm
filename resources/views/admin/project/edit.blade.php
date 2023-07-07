@@ -1,4 +1,4 @@
-@extends('admin.layout.layout') @section('content')
+@extends('admin.layout.layout') @section('content') @include('admin.layout.partials.flag')
 <div class="container-fluid mb-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb my-0 ms-2">
@@ -15,88 +15,105 @@
             <h4>Edit Project</h4>
         </div>
     </div>
-    <div class="row mt-5">
-        <div class="col-6">
-            <div class="row">
-                <div class="col-2">
-                    <label for="">Project name</label>
-                </div>
-                <div class="col-10">
-                    <input class="form-control" type="text" value="Project HRM rubiklab">
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="row">
-                <div class="col-2">
-                </div>
-                <div class="col-10">
-                    <a href="{{ route('admin.project.createTeam') }}" class="btn btn-success text-white">
-                         Add Member
-                    </a>
+    <form class="form-create bg-white p-4" action="{{ route('admin.project.update', $project->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="row mt-5">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-2">
+                        <label for="">Project name</label>
+                    </div>
+                    <div class="col-10">
+                        <input name="project_name" class="form-control" type="text" value="{{ $project->project_name }}">
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row mt-5">
-        <div class="col">
-            <div class="row">
-                <div class="col-2">
-                    <label for="">Start date</label>
-                </div>
-                <div class="col-10">
-                    <div class="datepicker date d-flex  mt-0 mx-auto">
-                        <div class="input-group">
-                            <input name="dateFrom" type="text" value="25/06/2023" placeholder="From date" class="form-control date-picker">
-                            <div class="input-group-append">
-                                <span class="input-group-text h-100"><i class="fa fa-calendar"></i></span>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-2">
+                    <label for="">Team</label>
+                    </div>
+                    <div class="col-10">
+                        <div class="row">
+                            <div class="col-8 select-custom">
+                                <select class="form-control" style="width: 100% !important" multiple>
+                                    @forelse($employees_of_projects as $employees_of_project)
+                                    <option value="{{ $employees_of_project->id }} " selected>{{ $employees_of_project->full_name }}</option>
+                                    @empty
+                                        <option></option>
+                                    @endforelse  
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <a href="{{ route('admin.project.createTeam' , $project->id) }}" class="btn btn-success text-white w-100">
+                                    {{ empty($employees_of_projects[0]->full_name) ? 'Add team' : 'Edit Team' }}
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div class="row">
-                <div class="col-2">
-                    <label for="">Deadline</label>
+        <div class="row mt-5">
+            <div class="col">
+                <div class="row">
+                    <div class="col-2">
+                        <label for="">Start date</label>
+                    </div>
+                    <div class="col-10">
+                        <div class="datepicker date d-flex  mt-0 mx-auto">
+                            <div class="input-group">
+                                <input name="start_date" type="text" value="{{ $project->start_date }}" placeholder="From date" class="form-control date-picker">
+                                <div class="input-group-append">
+                                    <span class="input-group-text h-100"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-10">
-                    <div class="datepicker date d-flex  mt-0 mx-auto">
-                        <div class="input-group">
-                            <input name="dateFrom" type="text" value="25/07/2023" placeholder="From date" class="form-control date-picker">
-                            <div class="input-group-append">
-                                <span class="input-group-text h-100"><i class="fa fa-calendar"></i></span>
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div class="col-2">
+                        <label for="">Deadline</label>
+                    </div>
+                    <div class="col-10">
+                        <div class="datepicker date d-flex  mt-0 mx-auto">
+                            <div class="input-group">
+                                <input name="end_date" type="text" value="{{ $project->end_date }}" placeholder="From date" class="form-control date-picker">
+                                <div class="input-group-append">
+                                    <span class="input-group-text h-100"><i class="fa fa-calendar"></i></span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row mt-5">
-        <label class="ml-1" for="">Description</label>
-        <div class="col mt-3">
-            <textarea id="summernote">Dự án HRM (Quản lý nguồn nhân lực) là một dự án nhằm tối ưu hóa việc quản lý và tận dụng tài nguyên con người trong một tổ chức hoặc doanh nghiệp. Dự án HRM bao gồm việc phân tích, thiết kế và triển khai các quy trình, hệ thống và công cụ để quản lý các hoạt động liên quan đến nhân sự.</textarea>
+        <div class="row mt-5">
+            <label class="ml-1" for="">Description</label>
+            <div class="col mt-3">
+                <textarea name="description" id="summernote">{{  $project->description }}</textarea>
+            </div>
         </div>
-    </div>
-    <div class="row mt-5">
-        <div class="col-6">
-            <div class="row">
-                <div class="col-2">
-                    <label for="">Avatar</label>
-                </div>
-                <div class="col-10">
-                    <img class="my-2 avatar-employee" src="{{ asset('storage/assets/img/avatar.jpg') }}" alt="1">
-                    <input class="form-control" type="file" name="" id="">
+        <div class="row mt-5">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-2">
+                        <label for="">Avatar</label>
+                    </div>
+                    <div class="col-10">
+                        <img class="my-2 avatar-employee" src="{{ asset('storage/assets/img/project/'.$project->image) }}" alt="1">
+                        <input name="upload_image" class="form-control" type="file" id="">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row mt-5">
-        <div class="col">
-            <div class="btn btn-primary">Save</div>
+        <div class="row mt-5">
+            <div class="col">
+                <input type="submit" class="btn btn-primary" value="Save"></input>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 @endsection

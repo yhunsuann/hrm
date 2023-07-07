@@ -31,7 +31,7 @@
                     <a href="">
                         <svg class="icon-search">
                             <use
-                                xlink:href="{{ asset('admin/vendors/@coreui/icons/svg/free.svg#cil-search') }}">
+                                xlink:href="{{ asset('CoreUi/vendors/@coreui/icons/svg/free.svg#cil-search') }}">
                             </use>
                         </svg>
                     </a>

@@ -2,6 +2,11 @@ $(document).ready(function() {
     $('#submit-button').click(function() {
         $(this).closest('form').submit();
     });
+
+    $('input:reset').click(function() {
+        $(this).closest('form').find('input:text').attr('value', '');
+    });
+
     $('select').selectize({
         sortField: 'text'
     });
@@ -26,6 +31,12 @@ $(document).ready(function() {
         $('#btn-delete-modal').attr("href", url);
     });
 
+    $('.datepicker-month').datepicker({
+        format: "MM yyyy",
+        viewMode: "months",
+        minViewMode: "months",
+    });
+
     $('#btn-delete-modal').on('click', function() {
         if ($(this).attr('href') == '') {
             $('#form-delete').submit();
@@ -34,8 +45,46 @@ $(document).ready(function() {
         }
     });
 
+    $('#role-member').change(function() {
+        var roleId = $(this).val().trim();
+        var pathArray = window.location.pathname.split('/');
+        var segment4 = pathArray[4];
+        $.ajax({
+            url: 'get-employees/' + segment4,
+            type: 'GET',
+            data: { id: roleId }
+        }).done(function(response) {
+            var options = [];
+            if (Array.isArray(response)) {
+                response.forEach(function(employee) {
+                    options.push({ value: employee.id, text: employee.full_name });
+                });
+            } else {
+                options.push({ value: response.id, text: response.full_name });
+            }
+            var selectize = $('#member-select')[0].selectize;
+
+            selectize.clearOptions();
+
+            selectize.addOption(options);
+
+            selectize.refreshItems();
+        }).fail(function(xhr, status, error) {
+            console.error(error);
+        });
+    });
+
     changeInput();
+
+    getCurrentTime();
+    setInterval(getCurrentTime, 1000);
 });
+
+function getCurrentTime() {
+    var currentTime = new Date();
+    var formattedTime = currentTime.getDate() + "-" + (currentTime.getMonth() + 1) + "-" + currentTime.getFullYear() + " " + currentTime.getHours() + ":" + currentTime.getMinutes() + ":" + currentTime.getSeconds();
+    $('#current-time').text(formattedTime);
+}
 
 function changeInput() {
     var value = $('#select-filter').val();

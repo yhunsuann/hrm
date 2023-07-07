@@ -8,4 +8,5 @@ Interface EmployeeInterface
     public function update($data, $id);
     public function create($data);
     public function delete($id);
+    public function getEmployeeRole($id);
 } 

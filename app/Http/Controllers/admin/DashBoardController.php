@@ -11,4 +11,9 @@ class DashBoardController extends Controller
     {
         return view('admin.dashboard.index');
     }
+
+    public function home()
+    {
+        return view('admin.dashboard.home');
+    }
 }

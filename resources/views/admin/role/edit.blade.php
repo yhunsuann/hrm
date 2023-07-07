@@ -11,6 +11,8 @@
     </nav>
 </div>
 <div class="container-content">
+<form class="form-create bg-white p-4" action="{{ route('admin.role.update', $infobyId->id) }}" method="POST" enctype="multipart/form-data">
+    @csrf
     <div class="row mt-3 mb-5">
         <div class="col">
             <h5>Role edit</h5>
@@ -24,7 +26,7 @@
             <label class="title" class="lable-role" for="">Name role</label>
         </div>
         <div class="col-10">
-            <input type="text" class="form-control" id="title" placeholder="Enter title" value="Manager">
+            <input type="text" class="form-control" id="title" placeholder="Enter title" value="{{ $infobyId->role_name }}">
         </div>
     </div>
     <div class="row permission mt-5">
@@ -33,160 +35,29 @@
         </div>
         <div class="col-10">
             <div class="row">
+            @foreach ($all_permission as $key => $permissions)
                 <div class="col-3">
-                    <p class="title">Employee</p>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Employee menu</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Employee list</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Employee create</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Employee edit</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Employee delete</label>
-                    </div>
+                    <p class="title">{{ $key }}</p>
+                    @foreach ($permissions as $item)
+                        <div class="container-checkbox">
+                            <input value="{{ $item['id'] }}" type="checkbox" name="permission_id[]" id=""  
+                                @if (in_array($item['permission_name'], $permission->pluck('permission_name')->toArray()))
+                                    checked
+                                @endif
+                            >
+                            <label for="">{{ $item['permission_name'] }}</label>
+                        </div>
+                    @endforeach
                 </div>
-                <div class="col-3">
-                    <p class="title">Role</p>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Role menu</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Role list</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Role create</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Role edit</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Role delete</label>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <p class="title">Attendance</p>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Attendance menu</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Attendance list</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Attendance create</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Attendance edit</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Attendance delete</label>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <p class="title">Request off</p>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Request off menu</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Request off list</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Request off create</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Request off edit</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Request off delete</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row permission mt-5">
-        <div class="col-2">
-            <label class="lable-role" for=""></label>
-        </div>
-        <div class="col-10">
-            <div class="row">
-                <div class="col-3">
-                    <p class="title">Employee</p>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="">
-                        <label for="">Employee menu</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="">
-                        <label for="">Employee list</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Employee create</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="">
-                        <label for="">Employee edit</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="">
-                        <label for="">Employee delete</label>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <p class="title">Employee</p>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="">
-                        <label for="">Employee menu</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="">
-                        <label for="">Employee list</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Employee create</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="">
-                        <label for="">Employee edit</label>
-                    </div>
-                    <div class="container-checkbox">
-                        <input type="checkbox" name="" id="" checked>
-                        <label for="">Employee delete</label>
-                    </div>
-                </div>
+            @endforeach
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            <div class="btn btn-primary">Save</div>
+            <input type="submit" class="btn btn-primary" value="Save"></input>
         </div>
     </div>
+</form>
 </div>
 @endsection

@@ -17,8 +17,8 @@
 
         <ul class="header-nav ms-3">
             <li class="nav-item dropdown nav-logout">
-                <a class="nav-link py-0" aria-haspopup="true">
-                    <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('coreUi/assets/img/avatars/8.jpg') }}" alt="user@email.com"> Logout </div>
+                <a href="{{ route('admin.logout') }}" class="nav-link py-0" aria-haspopup="true">
+                    <div class="avatar avatar-md"><img class="avatar-img" src="{{ asset('storage/assets/img/employee/'.auth()->user()->image) }}" alt="user@email.com"> Logout </div>
                 </a>
             </li>
         </ul>

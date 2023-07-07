@@ -10,6 +10,7 @@ use App\Models\Employees;
 class Projects extends Model
 {
     protected $table = 'projects';
+    public $timestamps = false;
     use HasFactory;
     use SoftDeletes;
     const UPDATED_AT = NULL;

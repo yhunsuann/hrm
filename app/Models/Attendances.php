@@ -13,7 +13,7 @@ class Attendances extends Model
     use HasFactory;
     use SoftDeletes;
     const UPDATED_AT = NULL;
-  
+    public $timestamps = false;
     protected $fillable = [
         'employee_id',
         'attendance_date',

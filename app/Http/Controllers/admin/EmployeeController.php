@@ -8,6 +8,9 @@ use App\Repositories\Interfaces\EmployeeInterface;
 use App\Repositories\Interfaces\RoleInterface;
 use App\Services\FileUploader;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Gate;
+
 
 class EmployeeController extends Controller
 {
@@ -26,21 +29,45 @@ class EmployeeController extends Controller
 
     public function index(Request $request)
     {
-        $emlpoyees = $this->model->list($request->all());
+        if (Gate::denies('employee-list')) {
+            abort(403, 'Unauthorized');
+        }
+
+        $employees = $this->model->list($request->all());
    
-        return view('admin.employee.index', compact('emlpoyees'));
+        return view('admin.employee.index', compact('employees'));
     }
 
     public function edit($id)
     {
+        if (Gate::denies('employee-edit')) {
+            abort(403, 'Unauthorized');
+        }
+        
         $employee = $this->model->getInfoById($id);
         $roles = $this->role->list();
 
         return view('admin.employee.edit', compact('employee','roles'));
     }
 
+    public function info($id)
+    {  
+        if (Gate::denies('employee-info')) {
+            abort(403, 'Unauthorized');
+        }
+
+        $employee = $this->model->getInfoById($id);
+        $roles = $this->role->list();
+
+        return view('admin.employee.info', compact('employee','roles'));
+    }
+
     public function create()
     {
+        if (Gate::denies('employee-create')) {
+            abort(403, 'Unauthorized');
+        }
+
         $roles = $this->role->list();
 
         return view('admin.employee.create', compact('roles'));
@@ -56,9 +83,6 @@ class EmployeeController extends Controller
             'bank_account' => 'required',
             'bank_name' => 'required',
             'birthday' => 'required',
-            'sex' => 'required',
-            'role_id'=> 'required',
-            'upload_image' => 'required|image',
         ]);
         if ($validator->fails()) {
             return back()->withErrors('Please enter full information !'); 
@@ -69,20 +93,22 @@ class EmployeeController extends Controller
             $file_name = $this->fileUploader->uploadFile($request,'employee');
             if ($file_name !== null) {
                 $request->merge(['image' => $file_name]);
+                $data['image'] = $request->image;
             }
         }
-        
+        if($request->password){
+            $data['password'] = Hash::make($request->password);
+        }
         $data['full_name'] = $request->full_name;
         $data['email'] = $request->email;
         $data['address'] = $request->address;
         $data['number_phone'] = $request->number_phone;
-        $data['image'] = $request->image;
         $data['bank_account'] = $request->bank_account;
         $data['bank_name'] = $request->bank_name;
         $data['birthday'] = $request->birthday;
         $data['sex'] = $request->sex;
         $data['role_id'] = $request->role_id;
-  
+
         $this->model->update($data,$id);
 
         return redirect()->route('admin.employee.index')->withSuccess('Edit Recruitments Successfully');
@@ -100,6 +126,7 @@ class EmployeeController extends Controller
             'birthday' => 'required',
             'sex' => 'required',
             'role_id'=> 'required',
+            'password'=> 'required',
             'upload_image' => 'required|image',
         ]);
         if ($validator->fails()) {
@@ -123,18 +150,22 @@ class EmployeeController extends Controller
         $data['bank_name'] = $request->bank_name;
         $data['birthday'] = $request->birthday;
         $data['sex'] = $request->sex;
+        $data['password'] = Hash::make($request->password);
         $data['role_id'] = $request->role_id;
-
+   
         $this->model->create($data);
-
+        
         return redirect()->route('admin.employee.index')->withSuccess('Create Employee Successfully');
     }
 
-    public function delete($id)
+    public function delete( $id)
     {
-      $this->model->delete($id);
-  
-      return redirect()->route('admin.employee.index')->withSuccess('Create Employee Successfully');
+        if (Gate::denies('employee-delete')) {
+            abort(403, 'Unauthorized');
+        }
+        
+        $this->model->delete($id);
+        
+        return redirect()->route('admin.employee.index')->withSuccess('Create Employee Successfully');
     }
-    
 }

@@ -19,14 +19,13 @@
         <div class="col search">
             <div class="row float-end search-row">
                     <div class="col-10 p-0">
-                        <div class="input-group">
-                        <select class="form-control" name="month" class="" id="status" style="width: 100% !important">
-                                @for ($i = 1; $i <= 12; $i++)
-                                    <option value="{{ $i }}" @if ($i == date('n')) selected @endif>
-                                        {{ date('F', mktime(0, 0, 0, $i, 1)) }}
-                                    </option>
-                                @endfor
-                            </select>
+                         <div class="datepicker-month date d-flex  mt-0 mx-auto">
+                                <div class="input-group">
+                                    <input value="{{ request()->has('month') ? request()->month : \Carbon\Carbon::now()->format('F Y') }}" name="month" type="text"  class="form-control date-picker">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text h-100"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-2">
@@ -60,7 +59,7 @@
                         <td>{{ \Carbon\Carbon::parse($attendance->check_out)->format('H:i') }}</td>
                         <td>{{ $attendance->status }}</td>
                         <td class="text-center action-form">
-                        <a href="{{ route('admin.attendance.detail',1) }}" class="cursor-pointer btn-edit"><i class="fa fa-solid fa-wrench"></i></a>&nbsp;
+                        <a href="{{ route('admin.attendance.edit', $attendance->id) }}" class="cursor-pointer btn-edit"><i class="fa fa-solid fa-wrench"></i></a>&nbsp;
                             <a data-id="" m-type="recruitment" type="button" data-coreui-toggle="modal" data-coreui-target="#exampleModal" class="open-modal btn-delete"><i class="fa fa-solid fa-trash"></i></a>
                         </td>
                     </tr>

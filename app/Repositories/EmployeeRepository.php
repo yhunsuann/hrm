@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Employees;
 use App\Repositories\Interfaces\EmployeeInterface;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeRepository implements EmployeeInterface
 {   
@@ -22,6 +23,12 @@ class EmployeeRepository implements EmployeeInterface
                                 $query->where('full_name', $name);
                             })
                             ->paginate(8);
+    }
+
+    public function getEmployeeRole($id)
+    {
+        return $this->model->where('role_id', $id)
+                            ->get();
     }
 
     public function getInfoById($id)
@@ -43,6 +50,12 @@ class EmployeeRepository implements EmployeeInterface
 
     public function delete($id)
     {
+        $employee = $this->model->findOrFail($id);
+
+        if (!empty($employee) && Storage::disk('public')->exists('assets/img/employee/' . $employee->image)) {
+            Storage::disk('public')->delete('assets/img/employee/' . $employee->image);
+        }
+
         $this->model->destroy($id); 
     }
 

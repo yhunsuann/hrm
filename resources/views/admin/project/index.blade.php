@@ -1,4 +1,4 @@
-@extends('admin.layout.layout') @section('content')
+@extends('admin.layout.layout') @section('content') @include('admin.layout.partials.flag')
 <div class="container-fluid mb-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb my-0 ms-2">
@@ -11,32 +11,41 @@
 </div>
 <div class="container-content">
     <div class="row px-4 mt-3">
-        <div class="col p-0">
+        <div class="col-6 p-0">
             <h5>List project</h5>
         </div>
+    </div>
+    <div class="row">
+        <div class="col"></div>
         <div class="col search">
-            <div class="row float-end search-row">
-                <div class="col-10 p-0">
-                    <div class="input-group">
-                        <select class="form-control" name="status" class="" id="status" style="width: 100% !important">
-                            <option selected value=""></option>
-                            <option value="Manager">hrm_1</option>
-                            <option value="Leader">hrm_2</option>
-                            <option value="PM">hrm_3</option>
-                            <option value="Dev">hrm_4</option>
+            <form id="form-employee" class="mb-0" method="get">
+                <div class="row">
+                    <div class="col-10 p-0">
+                        <div class="input-group">
+                            <select class="form-control" name="name" class="" id="status">
+                            <option selected value="">Choosee project...</option>
+                            @forelse($projects as $project_name)
+                                <option value="{{$project_name->project_name}}">{{$project_name->project_name}}</option>
+                            @empty
+                                <option value=""></option>
+                            @endforelse
                         </select>
+                        </div>
+                    </div>
+                    <div class="col-1 text-end">
+                        <a type="button" id="submit-button" class="search-button">
+                            <svg class="icon-search">
+                            <use xlink:href="{{ asset('coreUi/vendors/@coreui/icons/svg/free.svg#cil-search') }}"></use>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="col-1 text-start p-0">
+                        <a href="{{ route('admin.project.index') }}" class="reset-button">
+                            <i class="fa fas fa-undo"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="col-2">
-                    <a href="">
-                        <svg class="icon-search">
-                            <use
-                                xlink:href="{{ asset('coreUi/vendors/@coreui/icons/svg/free.svg#cil-search') }}">
-                            </use>
-                        </svg>
-                    </a>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
     <div class="row mt-4">
@@ -44,72 +53,41 @@
             <table class="table caption-top bg-white table table-striped table-hover mb-1">
                 <thead>
                     <tr class="py-3">
-                        <th scope="col"><b>Id</b></th>
                         <th scope="col"><b>Name</b></th>
-                        <th scope="col"><b>Team</b></th>
-                        <th scope="col"><b>Start_date</b></th>
-                        <th scope="col"><b>Start_end</b></th>
+                        <th width="300px" scope="col"><b>Team</b></th>
+                        <th scope="col"><b>Start date</b></th>
+                        <th scope="col"><b>End date</b></th>
                         <th scope="col"><b>Status</b></th>
                         <th scope="col" class="text-center"><b>Action</b></th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
+                    @forelse($projects as $project)
                     <tr>
-                        <td>hrm_1</td>
-                        <td>Project HRM rubiklab</td>
-                        <td>Phuoc,Linh,Tho</td>
-                        <td>25/06/2023</td>
-                        <td>25/07/2023</td>
-                        <td>Pedding</td>
+                        <td>{{ $project->project_name }}</td>
+                        <td>
+                            <p class="team-project">{{ $project->team === null ? '--' : $project->team }} </p>
+                        </td>
+                        <td>{{ $project->start_date === null ? '--' : \Carbon\Carbon::parse($project->start_date)->format('d-m-Y') }}</td>
+                        <td>{{ $project->start_date === null ? '--' : \Carbon\Carbon::parse($project->end_date)->format('d-m-Y') }}</td>
+                        <td>{{ $project->status === null ? '--' : $project->status }}</td>
                         <td class="text-center action-form">
-                            <a href="{{ route('admin.project.edit',1) }}" class="cursor-pointer btn-edit"><i class="fa fa-solid fa-wrench"></i></a>&nbsp;
-                            <a data-id="" m-type="recruitment" type="button" data-coreui-toggle="modal" data-coreui-target="#exampleModal" class="open-modal btn-delete"><i class="fa fa-solid fa-trash"></i></a>
+                            <a href="{{ route('admin.project.edit', $project->id) }}" class="cursor-pointer btn-edit"><i class="fa fa-solid fa-wrench"></i></a>&nbsp;
+                            <a data-id="{{ $project->id }}" m-type="project" type="button" data-coreui-toggle="modal" data-coreui-target="#exampleModal" class="open-modal btn-delete"><i class="fa fa-solid fa-trash"></i></a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>hrm_3</td>
-                        <td>Project HRM rubiklab</td>
-                        <td>Phuoc,Linh,Tho,tuan,danh</td>
-                        <td>25/06/2023</td>
-                        <td>25/07/2023</td>
-                        <td>Pedding</td>
-                        <td class="text-center action-form">
-                            <a href="{{ route('admin.employee.edit',1) }}" class="cursor-pointer btn-edit"><i class="fa fa-solid fa-wrench"></i></a>&nbsp;
-                            <a data-id="" m-type="recruitment" type="button" data-coreui-toggle="modal" data-coreui-target="#exampleModal" class="open-modal btn-delete"><i class="fa fa-solid fa-trash"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>hrm_2</td>
-                        <td>Project HRM rubiklab</td>
-                        <td>Phuoc,Linh,Tho,tuan</td>
-                        <td>25/06/2023</td>
-                        <td>25/07/2023</td>
-                        <td>Pedding</td>
-                        <td class="text-center action-form">
-                            <a href="{{ route('admin.employee.edit',1) }}" class="cursor-pointer btn-edit"><i class="fa fa-solid fa-wrench"></i></a>&nbsp;
-                            <a data-id="" m-type="recruitment" type="button" data-coreui-toggle="modal" data-coreui-target="#exampleModal" class="open-modal btn-delete"><i class="fa fa-solid fa-trash"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>hrm_4</td>
-                        <td>Project HRM rubiklab</td>
-                        <td>Phuoc,Linh,Tho,tuan</td>
-                        <td>25/06/2023</td>
-                        <td>25/07/2023</td>
-                        <td>Pedding</td>
-                        <td class="text-center action-form">
-                            <a href="{{ route('admin.employee.edit',1) }}" class="cursor-pointer btn-edit"><i class="fa fa-solid fa-wrench"></i></a>&nbsp;
-                            <a data-id="" m-type="recruitment" type="button" data-coreui-toggle="modal" data-coreui-target="#exampleModal" class="open-modal btn-delete"><i class="fa fa-solid fa-trash"></i></a>
-                        </td>
-                    </tr>
+                    @empty
+                    <td colspan="6" class="text-center">No data</td>
+                    @endforelse
                 </tbody>
             </table>
             <div class="pagination--custom row mt-3">
-                <div class="col-6 pagination-info">
-                    Showing 0 to 1 of 1 entries
-                </div>
-                <div class="pagination-box col-6">
-
+                <div class="col-5 pagination-info">
+                    @php $from = ($projects->currentPage() - 1) * $projects->perPage(); $to = $projects->currentPage() * $projects->perPage(); $total = $projects->total() @endphp Showing {{ $from }} to {{ $to
+                    < $total ? $to : $total }} of {{ $total }} entries </div>
+                        <div class="pagination-box col-7">
+                            {{ $projects->appends($_GET)->links() }}
+                        </div>
                 </div>
             </div>
         </div>

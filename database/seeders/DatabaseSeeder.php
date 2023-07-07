@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Employees;
 use App\Models\Roles;
+use App\Models\Projects;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,7 +22,8 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        Employees::factory()->count(10)->create();
+        // Employees::factory()->count(10)->create();
         // Roles::factory()->count(10)->create();
+        Projects::factory()->count(10)->create();
     }
 }
